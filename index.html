@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> CATÁLOGO DO GB PODS </title>
+
+  <title>CATÁLOGO DO GB PODS</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
 
@@ -11,35 +16,36 @@
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family:Arial, sans-serif;
+      font-family:Arial,sans-serif;
     }
 
     body{
       background:#111;
       color:white;
     }
-header{
-  padding:30px 20px;
-  text-align:center;
-  background:#000;
-}
 
-.logo{
-  width:220px;
-  height:220px;
-  object-fit:cover;
-  border-radius:50%;
-  border:6px solid white;
-  background:#000;
-  box-shadow:0 0 30px rgba(255,255,255,0.2);
-}
+    header{
+      padding:30px 20px;
+      text-align:center;
+      background:#000;
+    }
 
-.titulo{
-  margin-top:15px;
-  font-size:32px;
-  font-weight:bold;
-  color:white;
-  letter-spacing:2px;
+    .logo{
+      width:220px;
+      height:220px;
+      object-fit:cover;
+      border-radius:50%;
+      border:6px solid white;
+      background:#000;
+      box-shadow:0 0 30px rgba(255,255,255,0.2);
+    }
+
+    .titulo{
+      margin-top:15px;
+      font-size:32px;
+      font-weight:bold;
+      color:white;
+      letter-spacing:2px;
     }
 
     .container{
@@ -87,7 +93,7 @@ header{
     button{
       width:100%;
       padding:15px;
-      margin-top:25px;
+      margin-top:15px;
       border:none;
       border-radius:12px;
       background:red;
@@ -103,12 +109,17 @@ header{
     }
 
     .resultado{
-      display:none;
       margin-top:25px;
       background:#222;
       padding:20px;
       border-radius:15px;
       border:1px solid red;
+    }
+
+    .itemCarrinho{
+      padding:12px;
+      border-bottom:1px solid #444;
+      margin-bottom:10px;
     }
 
     footer{
@@ -118,18 +129,20 @@ header{
     }
 
   </style>
+
 </head>
+
 <body>
 
 <header>
 
-  <img 
+  <img
     src="IMG-20260523-WA0008.jpg"
     class="logo"
   >
 
   <div class="titulo">
-    TROPA GB PODS 
+    TROPA GB PODS
   </div>
 
 </header>
@@ -143,20 +156,8 @@ header{
 
   <select id="pod" onchange="atualizarSabores()">
 
-    <option value="">Selecione</option>
-
-    <option value="V80">V80 - R$130</option>
-
-    <option value="V250">V250 - R$160</option>
-
-    <option value="V150">V150 - R$150</option>
-
-    <option value="Black Sheep 15K">
-      Black Sheep 15K - R$150
-    </option>
-
-    <option value="Black Sheep 55K">
-      Black Sheep 55K - R$190
+    <option value="">
+      Carregando pods...
     </option>
 
   </select>
@@ -175,7 +176,7 @@ header{
   <!-- NOME -->
   <label>Seu Nome</label>
 
-  <input 
+  <input
     type="text"
     id="nome"
     placeholder="Digite seu nome"
@@ -184,18 +185,70 @@ header{
   <!-- OBS -->
   <label>Observação</label>
 
-  <textarea 
+  <textarea
     id="obs"
     placeholder="Ex: troco, entrega rápida..."
   ></textarea>
 
-  <!-- BOTÃO -->
-  <button onclick="enviarWhatsapp()">
-    Fazer Pedido
+  <!-- BOTÕES -->
+  <button onclick="adicionarCarrinho()">
+    Adicionar ao Carrinho
   </button>
 
-  <!-- RESULTADO -->
-  <div class="resultado" id="resultado"></div>
+  <button onclick="enviarWhatsapp()">
+    Finalizar Pedido
+  </button>
+
+  <!-- CARRINHO -->
+  <div class="resultado">
+
+    <h2>
+      🛒 Carrinho
+    </h2>
+
+    <div id="itensCarrinho"></div>
+
+    <h3 style="margin-top:20px;">
+      Total: R$ <span id="total">0</span>
+    </h3>
+
+    <!-- PAGAMENTO -->
+    <label>Forma de Pagamento</label>
+
+    <select id="pagamento" onchange="mostrarTroco()">
+
+      <option value="">
+        Selecione
+      </option>
+
+      <option value="Dinheiro">
+        Dinheiro
+      </option>
+
+      <option value="Cartão">
+        Cartão
+      </option>
+
+      <option value="Pix">
+        Pix
+      </option>
+
+    </select>
+
+    <!-- TROCO -->
+    <div id="trocoArea" style="display:none;">
+
+      <label>Troco Para Quanto?</label>
+
+      <input
+        type="number"
+        id="troco"
+        placeholder="Ex: 200"
+      >
+
+    </div>
+
+  </div>
 
 </div>
 
@@ -205,140 +258,271 @@ header{
 
 <script>
 
-  // SABORES POR POD
-  const sabores = {
+const supabaseUrl =
+'https://quknbmwjfdteqlaysvwp.supabase.co'
 
-    "V80": [
-      "Uva Ice",
-      "Frozen Morango",
-      "Menta Chiclete",
-      "Maracujá Kiwi",
-      "Melancia Ice"
-    ],
+const supabaseKey =
+'sb_publishable_kB3PjpFhT42CBzbn9W0eQA_kgRjHXfH'
 
-    "V250": [
-      "Melão Minty",
-      "Aloé Grape",
-      "Morango Banana"
-    ],
+const client =
+supabase.createClient(supabaseUrl, supabaseKey)
 
-    "V150": [
-      "Framboesa"
-    ],
+const sabores = {}
 
-    "Black Sheep 15K": [
-      "Maracujá",
-      "Manga Pêssego Melancia",
-      "Melancia Morango",
-      "Menthol"
-    ],
+const precos = {}
 
-    "Black Sheep 55K": [
-      "Cool Mint",
-      "Melancia Ice"
-    ]
+let carrinho = []
 
-  };
+async function carregarProdutos(){
 
-  // ATUALIZAR SABORES
-  function atualizarSabores(){
+  const { data, error } =
+  await client
+  .from('produtos')
+  .select('*')
+  .eq('estoque', true)
 
-    const pod =
-      document.getElementById("pod").value;
+  if(error){
 
-    const select =
-      document.getElementById("sabores");
-
-    select.innerHTML = "";
-
-    if(!pod){
-
-      select.innerHTML =
-      "<option>Escolha um pod primeiro</option>";
-
-      return;
-
-    }
-
-    sabores[pod].forEach(function(sabor){
-
-      const option =
-        document.createElement("option");
-
-      option.value = sabor;
-
-      option.textContent = sabor;
-
-      select.appendChild(option);
-
-    });
+    console.log(error)
+    return
 
   }
 
-  // WHATSAPP
-  function enviarWhatsapp(){
+  const selectPod =
+  document.getElementById("pod")
 
-    const pod =
-      document.getElementById("pod").value;
+  selectPod.innerHTML =
+  '<option value="">Selecione</option>'
 
-    const sabor =
-      document.getElementById("sabores").value;
+  data.forEach(produto => {
 
-    const nome =
-      document.getElementById("nome").value;
+    if(!sabores[produto.nome]){
 
-    const obs =
-      document.getElementById("obs").value;
+      sabores[produto.nome] = []
 
-    if(!pod){
+      precos[produto.nome] = produto.preco
 
-      alert("Escolha um pod!");
+      const option =
+      document.createElement("option")
 
-      return;
+      option.value = produto.nome
+
+      option.textContent =
+      `${produto.nome} - R$${produto.preco}`
+
+      selectPod.appendChild(option)
 
     }
 
-    const mensagem = 
+    sabores[produto.nome]
+    .push(produto.sabor)
+
+  })
+
+}
+
+// atualizar sabores
+function atualizarSabores(){
+
+  const pod =
+  document.getElementById("pod").value
+
+  const select =
+  document.getElementById("sabores")
+
+  select.innerHTML = ""
+
+  if(!pod){
+
+    select.innerHTML =
+    "<option>Escolha um pod primeiro</option>"
+
+    return
+
+  }
+
+  sabores[pod].forEach(sabor => {
+
+    const option =
+    document.createElement("option")
+
+    option.value = sabor
+
+    option.textContent = sabor
+
+    select.appendChild(option)
+
+  })
+
+}
+
+// adicionar carrinho
+function adicionarCarrinho(){
+
+  const pod =
+  document.getElementById("pod").value
+
+  const sabor =
+  document.getElementById("sabores").value
+
+  if(!pod){
+
+    alert("Escolha um pod!")
+    return
+
+  }
+
+  carrinho.push({
+
+    pod,
+    sabor,
+    preco: Number(precos[pod])
+
+  })
+
+  atualizarCarrinho()
+
+}
+
+// atualizar carrinho
+function atualizarCarrinho(){
+
+  const itens =
+  document.getElementById("itensCarrinho")
+
+  const total =
+  document.getElementById("total")
+
+  itens.innerHTML = ""
+
+  let soma = 0
+
+  carrinho.forEach(item => {
+
+    soma += item.preco
+
+    itens.innerHTML += `
+
+      <div class="itemCarrinho">
+
+        <p><b>${item.pod}</b></p>
+
+        <p>${item.sabor}</p>
+
+        <p>R$ ${item.preco}</p>
+
+      </div>
+
+    `
+
+  })
+
+  soma += 3
+
+  total.innerText = soma
+
+}
+
+// troco
+function mostrarTroco(){
+
+  const pagamento =
+  document.getElementById("pagamento").value
+
+  const trocoArea =
+  document.getElementById("trocoArea")
+
+  if(pagamento == "Dinheiro"){
+
+    trocoArea.style.display = "block"
+
+  }else{
+
+    trocoArea.style.display = "none"
+
+  }
+
+}
+
+// whatsapp
+function enviarWhatsapp(){
+
+  const nome =
+  document.getElementById("nome").value
+
+  const obs =
+  document.getElementById("obs").value
+
+  const pagamento =
+  document.getElementById("pagamento").value
+
+  const troco =
+  document.getElementById("troco").value
+
+  if(carrinho.length == 0){
+
+    alert("Adicione produtos!")
+    return
+
+  }
+
+  let pedido = ""
+
+  let total = 0
+
+  carrinho.forEach(item => {
+
+    pedido +=
+`🔥 ${item.pod}
+🍓 ${item.sabor}
+💰 R$ ${item.preco}
+
+`
+
+    total += item.preco
+
+  })
+
+  total += 3
+
+  let mensagem =
 `Olá, gostaria de fazer um pedido!
 
 👤 Nome: ${nome}
 
-🔥 Pod Escolhido: ${pod}
+🛒 PEDIDOS:
 
-🍓 Sabor: ${sabor}
+${pedido}
 
-📝 Observação: ${obs}`;
+🚚 Taxa de entrega: R$3
 
-    const numero = "558486774080";
+💵 Total: R$ ${total}
 
-    const url =
-`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+💳 Pagamento: ${pagamento}
 
-    window.open(url, "_blank");
+📝 Observação: ${obs}`
 
-    // RESULTADO VISUAL
-    const resultado =
-      document.getElementById("resultado");
+  if(pagamento == "Dinheiro" && troco){
 
-    resultado.style.display = "block";
+    mensagem +=
+`
 
-    resultado.innerHTML = `
-
-      <h3 style="color:#ff3b3b;">
-        Pedido enviado com sucesso ✅
-      </h3>
-
-      <br>
-
-      <p><b>Pod:</b> ${pod}</p>
-
-      <p><b>Sabor:</b> ${sabor}</p>
-
-    `;
+💸 Troco para: R$ ${troco}`
 
   }
+
+  const numero = "558486774080"
+
+  const url =
+`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
+
+  window.open(url, "_blank")
+
+}
+
+carregarProdutos()
 
 </script>
 
 </body>
-</html>
+      </html>
