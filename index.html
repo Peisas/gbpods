@@ -15,43 +15,47 @@
     }
 
     body{
-      background:#0a0a0a;
+      background:#111;
       color:white;
     }
 
     header{
-      background:linear-gradient(90deg,#00ff88,#00bb66);
-      padding:22px;
+      padding:30px 20px;
       text-align:center;
-      font-size:30px;
-      font-weight:bold;
-      color:black;
-      letter-spacing:2px;
+      background:linear-gradient(90deg,#ff0000,#ffffff);
     }
 
-    /* CATÁLOGO MESMA PROPORÇÃO */
-    .catalogo{
-      width:100%;
-      max-width:700px;
-      display:block;
-      margin:auto;
-      object-fit:contain;
+    .logo{
+      width:220px;
+      height:220px;
+      object-fit:cover;
+      border-radius:50%;
+      border:6px solid white;
+      box-shadow:0 0 30px rgba(255,0,0,0.5);
+    }
+
+    .titulo{
+      margin-top:15px;
+      font-size:32px;
+      font-weight:bold;
+      color:#111;
+      letter-spacing:2px;
     }
 
     .container{
       width:90%;
       max-width:550px;
       margin:30px auto;
-      background:#111;
+      background:#1a1a1a;
       padding:25px;
       border-radius:20px;
-      border:2px solid #00ff88;
-      box-shadow:0 0 25px rgba(0,255,136,0.2);
+      border:2px solid red;
+      box-shadow:0 0 25px rgba(255,0,0,0.2);
     }
 
     h2{
       text-align:center;
-      color:#00ff88;
+      color:#ff3b3b;
       margin-bottom:20px;
     }
 
@@ -59,7 +63,7 @@
       display:block;
       margin-top:18px;
       margin-bottom:8px;
-      color:#00ff88;
+      color:#ff4d4d;
       font-weight:bold;
     }
 
@@ -70,7 +74,7 @@
       padding:14px;
       border:none;
       border-radius:12px;
-      background:#1b1b1b;
+      background:#2a2a2a;
       color:white;
       font-size:15px;
     }
@@ -86,8 +90,8 @@
       margin-top:25px;
       border:none;
       border-radius:12px;
-      background:#00ff88;
-      color:black;
+      background:red;
+      color:white;
       font-size:17px;
       font-weight:bold;
       cursor:pointer;
@@ -95,22 +99,22 @@
     }
 
     button:hover{
-      background:#00cc6d;
+      background:#cc0000;
     }
 
     .resultado{
       display:none;
       margin-top:25px;
-      background:#1a1a1a;
+      background:#222;
       padding:20px;
       border-radius:15px;
-      border:1px solid #00ff88;
+      border:1px solid red;
     }
 
     footer{
       text-align:center;
       padding:25px;
-      color:#666;
+      color:#888;
     }
 
   </style>
@@ -118,11 +122,17 @@
 <body>
 
 <header>
-  TROPA GB PODS
-</header>
 
-<!-- CATÁLOGO -->
-<img src="IMG_20260523_021616.jpg" class="catalogo">
+  <img 
+    src="1000225215.jpg"
+    class="logo"
+  >
+
+  <div class="titulo">
+    TROPA GB PODS
+  </div>
+
+</header>
 
 <div class="container">
 
@@ -141,9 +151,13 @@
 
     <option value="V150">V150 - R$150</option>
 
-    <option value="Black Sheep 15K">Black Sheep 15K - R$150</option>
+    <option value="Black Sheep 15K">
+      Black Sheep 15K - R$150
+    </option>
 
-    <option value="Black Sheep 55K">Black Sheep 55K - R$190</option>
+    <option value="Black Sheep 55K">
+      Black Sheep 55K - R$190
+    </option>
 
   </select>
 
@@ -152,7 +166,9 @@
 
   <select id="sabores">
 
-    <option>Escolha um pod primeiro</option>
+    <option>
+      Escolha um pod primeiro
+    </option>
 
   </select>
 
@@ -308,7 +324,7 @@
 
     resultado.innerHTML = `
 
-      <h3 style="color:#00ff88;">
+      <h3 style="color:#ff3b3b;">
         Pedido enviado com sucesso ✅
       </h3>
 
