@@ -2,133 +2,200 @@
 <html lang="pt-BR">
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>CATÁLOGO DO GB PODS</title>
+<title>GB PODS</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-  <style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
-    }
+<style>
 
-    body{
-      background:#111;
-      color:white;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
 
-    header{
-      padding:30px 20px;
-      text-align:center;
-      background:#000;
-    }
+body{
+  background:#0d0d0d;
+  color:white;
+}
 
-    .logo{
-      width:220px;
-      height:220px;
-      object-fit:cover;
-      border-radius:50%;
-      border:6px solid white;
-      background:#000;
-      box-shadow:0 0 30px rgba(255,255,255,0.2);
-    }
+header{
+  background:linear-gradient(180deg,#000,#111);
+  padding:20px;
+  border-bottom:1px solid rgba(255,0,0,0.2);
+}
 
-    .titulo{
-      margin-top:15px;
-      font-size:32px;
-      font-weight:bold;
-      color:white;
-      letter-spacing:2px;
-    }
+.topo{
+  display:flex;
+  justify-content:flex-end;
+}
 
-    .container{
-      width:90%;
-      max-width:550px;
-      margin:30px auto;
-      background:#1a1a1a;
-      padding:25px;
-      border-radius:20px;
-      border:2px solid red;
-      box-shadow:0 0 25px rgba(255,0,0,0.2);
-    }
+.logo-area{
+  text-align:center;
+  margin-top:10px;
+}
 
-    h2{
-      text-align:center;
-      color:#ff3b3b;
-      margin-bottom:20px;
-    }
+.logo{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  object-fit:cover;
+  border:5px solid white;
+  box-shadow:
+  0 0 40px rgba(255,0,0,0.4),
+  0 0 80px rgba(255,255,255,0.1);
+}
 
-    label{
-      display:block;
-      margin-top:18px;
-      margin-bottom:8px;
-      color:#ff4d4d;
-      font-weight:bold;
-    }
+.titulo{
+  margin-top:15px;
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:3px;
+}
 
-    select,
-    input,
-    textarea{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      background:#2a2a2a;
-      color:white;
-      font-size:15px;
-    }
+.subtitulo{
+  margin-top:8px;
+  color:#999;
+  font-size:14px;
+}
 
-    textarea{
-      height:100px;
-      resize:none;
-    }
+.admin-btn{
+  width:auto;
+  padding:12px 18px;
+  border:none;
+  border-radius:14px;
+  background:red;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
 
-    button{
-      width:100%;
-      padding:15px;
-      margin-top:15px;
-      border:none;
-      border-radius:12px;
-      background:red;
-      color:white;
-      font-size:17px;
-      font-weight:bold;
-      cursor:pointer;
-      transition:0.3s;
-    }
+.admin-btn:hover{
+  background:#cc0000;
+}
 
-    button:hover{
-      background:#cc0000;
-    }
+.container{
+  width:92%;
+  max-width:650px;
+  margin:30px auto;
+}
 
-    .resultado{
-      margin-top:25px;
-      background:#222;
-      padding:20px;
-      border-radius:15px;
-      border:1px solid red;
-    }
+.card{
+  background:linear-gradient(180deg,#1b1b1b,#111);
+  border:1px solid rgba(255,0,0,0.2);
+  border-radius:28px;
+  padding:25px;
+  box-shadow:0 0 30px rgba(255,0,0,0.1);
+  margin-bottom:25px;
+}
 
-    .itemCarrinho{
-      padding:12px;
-      border-bottom:1px solid #444;
-      margin-bottom:10px;
-    }
+h2{
+  margin-bottom:20px;
+  font-size:24px;
+}
 
-    footer{
-      text-align:center;
-      padding:25px;
-      color:#888;
-    }
+label{
+  display:block;
+  margin-top:18px;
+  margin-bottom:10px;
+  color:#ff4d4d;
+  font-weight:600;
+}
 
-  </style>
+select,
+input,
+textarea{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  background:#222;
+  color:white;
+  font-size:15px;
+}
+
+textarea{
+  resize:none;
+  height:100px;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  margin-top:18px;
+  border:none;
+  border-radius:16px;
+  background:red;
+  color:white;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#cc0000;
+}
+
+.itemCarrinho{
+  background:#1c1c1c;
+  padding:15px;
+  border-radius:18px;
+  margin-top:15px;
+}
+
+.total{
+  margin-top:20px;
+  font-size:22px;
+  font-weight:700;
+  color:#00ff88;
+}
+
+footer{
+  text-align:center;
+  padding:40px 20px;
+  color:#777;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  z-index:999;
+  overflow:auto;
+  padding:20px;
+}
+
+.admin-produto{
+  background:#1c1c1c;
+  padding:15px;
+  border-radius:18px;
+  margin-top:15px;
+}
+
+@media(max-width:600px){
+
+  .logo{
+    width:140px;
+    height:140px;
+  }
+
+  .titulo{
+    font-size:24px;
+  }
+
+}
+
+</style>
 
 </head>
 
@@ -136,227 +203,292 @@
 
 <header>
 
-  <img
-    src="IMG-20260523-WA0008.jpg"
-    class="logo"
-  >
+<div class="topo">
 
-  <div class="titulo">
-    TROPA GB PODS
-  </div>
+<button
+class="admin-btn"
+onclick="abrirAdmin()"
+>
+🔒 Sou Sócio
+</button>
+
+</div>
+
+<div class="logo-area">
+
+<img
+src="IMG-20260523-WA0008.jpg"
+class="logo"
+>
+
+<div class="titulo">
+TROPA GB PODS
+</div>
+
+<div class="subtitulo">
+Os melhores pods da região 🚀
+</div>
+
+</div>
 
 </header>
 
 <div class="container">
 
-  <h2>Monte Seu Pedido</h2>
+<div class="card">
 
-  <!-- POD -->
-  <label>Escolha o Pod</label>
+<h2>Monte Seu Pedido</h2>
 
-  <select id="pod" onchange="atualizarSabores()">
+<label>Escolha o Pod</label>
 
-    <option value="">
-      Carregando pods...
-    </option>
+<select
+id="pod"
+onchange="atualizarSabores()"
+></select>
 
-  </select>
+<label>Escolha o Sabor</label>
 
-  <!-- SABOR -->
-  <label>Escolha o Sabor</label>
+<select id="sabores"></select>
 
-  <select id="sabores">
+<label>Seu Nome</label>
 
-    <option>
-      Escolha um pod primeiro
-    </option>
+<input
+type="text"
+id="nome"
+placeholder="Digite seu nome"
+>
 
-  </select>
+<label>Observação</label>
 
-  <!-- NOME -->
-  <label>Seu Nome</label>
+<textarea
+id="obs"
+placeholder="Ex: troco, entrega rápida..."
+></textarea>
 
-  <input
-    type="text"
-    id="nome"
-    placeholder="Digite seu nome"
-  >
+<button onclick="adicionarCarrinho()">
+Adicionar ao Carrinho
+</button>
 
-  <!-- OBS -->
-  <label>Observação</label>
+<button onclick="enviarWhatsapp()">
+Finalizar Pedido
+</button>
 
-  <textarea
-    id="obs"
-    placeholder="Ex: troco, entrega rápida..."
-  ></textarea>
+</div>
 
-  <!-- BOTÕES -->
-  <button onclick="adicionarCarrinho()">
-    Adicionar ao Carrinho
-  </button>
+<div class="card">
 
-  <button onclick="enviarWhatsapp()">
-    Finalizar Pedido
-  </button>
+<h2>🛒 Carrinho</h2>
 
-  <!-- CARRINHO -->
-  <div class="resultado">
+<div id="itensCarrinho"></div>
 
-    <h2>
-      🛒 Carrinho
-    </h2>
+<div class="total">
+Total: R$ <span id="total">0</span>
+</div>
 
-    <div id="itensCarrinho"></div>
+<label>Forma de Pagamento</label>
 
-    <h3 style="margin-top:20px;">
-      Total: R$ <span id="total">0</span>
-    </h3>
+<select
+id="pagamento"
+onchange="mostrarTroco()"
+>
 
-    <!-- PAGAMENTO -->
-    <label>Forma de Pagamento</label>
+<option>Selecione</option>
+<option>Dinheiro</option>
+<option>Cartão</option>
+<option>Pix</option>
 
-    <select id="pagamento" onchange="mostrarTroco()">
+</select>
 
-      <option value="">
-        Selecione
-      </option>
+<div
+id="trocoArea"
+style="display:none;"
+>
 
-      <option value="Dinheiro">
-        Dinheiro
-      </option>
+<label>Troco para quanto?</label>
 
-      <option value="Cartão">
-        Cartão
-      </option>
+<input
+type="number"
+id="troco"
+placeholder="Ex: 200"
+>
 
-      <option value="Pix">
-        Pix
-      </option>
+</div>
 
-    </select>
+</div>
 
-    <!-- TROCO -->
-    <div id="trocoArea" style="display:none;">
+</div>
 
-      <label>Troco Para Quanto?</label>
+<!-- ADMIN -->
 
-      <input
-        type="number"
-        id="troco"
-        placeholder="Ex: 200"
-      >
+<div
+class="modal"
+id="adminModal"
+>
 
-    </div>
+<div class="container">
 
-  </div>
+<div class="card">
+
+<button onclick="fecharAdmin()">
+Fechar
+</button>
+
+<h2>Painel Sócio</h2>
+
+<input
+type="text"
+id="login"
+placeholder="Login"
+>
+
+<input
+type="password"
+id="senha"
+placeholder="Senha"
+style="margin-top:15px;"
+>
+
+<button onclick="fazerLogin()">
+Entrar
+</button>
+
+<div
+id="painelAdmin"
+style="display:none;"
+>
+
+<hr style="
+margin:25px 0;
+border-color:#333;
+">
+
+<h2>Adicionar Produto</h2>
+
+<input
+type="text"
+id="novoNome"
+placeholder="Nome do Pod"
+>
+
+<input
+type="text"
+id="novoSabor"
+placeholder="Sabor"
+style="margin-top:15px;"
+>
+
+<input
+type="number"
+id="novoPreco"
+placeholder="Preço"
+style="margin-top:15px;"
+>
+
+<button onclick="adicionarProduto()">
+Adicionar Produto
+</button>
+
+<div
+id="listaAdmin"
+style="margin-top:25px;"
+></div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 <footer>
-  © 2026 TROPA GB PODS
+© 2026 TROPA GB PODS
 </footer>
 
 <script>
 
-const supabaseUrl =
-'https://quknbmwjfdteqlaysvwp.supabase.co'
+let produtos = [
 
-const supabaseKey =
-'sb_publishable_kB3PjpFhT42CBzbn9W0eQA_kgRjHXfH'
+{
+id:1,
+nome:"V80",
+sabor:"Uva Ice",
+preco:130
+},
 
-const client =
-supabase.createClient(supabaseUrl, supabaseKey)
+{
+id:2,
+nome:"V250",
+sabor:"Melão Minty",
+preco:160
+},
 
-const sabores = {}
+{
+id:3,
+nome:"Black Sheep 15K",
+sabor:"Maracujá",
+preco:150
+}
 
-const precos = {}
+]
 
 let carrinho = []
 
-async function carregarProdutos(){
+function carregarProdutos(){
 
-  const { data, error } =
-  await client
-  .from('produtos')
-  .select('*')
-  .eq('estoque', true)
-
-  if(error){
-
-    console.log(error)
-    return
-
-  }
-
-  const selectPod =
+  const select =
   document.getElementById("pod")
 
-  selectPod.innerHTML =
-  '<option value="">Selecione</option>'
+  select.innerHTML = ""
 
-  data.forEach(produto => {
+  let nomes = []
 
-    if(!sabores[produto.nome]){
+  produtos.forEach(produto => {
 
-      sabores[produto.nome] = []
+    if(!nomes.includes(produto.nome)){
 
-      precos[produto.nome] = produto.preco
+      nomes.push(produto.nome)
 
-      const option =
-      document.createElement("option")
-
-      option.value = produto.nome
-
-      option.textContent =
-      `${produto.nome} - R$${produto.preco}`
-
-      selectPod.appendChild(option)
+      select.innerHTML += `
+      <option value="${produto.nome}">
+      ${produto.nome} - R$${produto.preco}
+      </option>
+      `
 
     }
 
-    sabores[produto.nome]
-    .push(produto.sabor)
-
   })
+
+  atualizarSabores()
 
 }
 
-// atualizar sabores
 function atualizarSabores(){
 
   const pod =
   document.getElementById("pod").value
 
-  const select =
+  const sabores =
   document.getElementById("sabores")
 
-  select.innerHTML = ""
+  sabores.innerHTML = ""
 
-  if(!pod){
+  produtos.forEach(produto => {
 
-    select.innerHTML =
-    "<option>Escolha um pod primeiro</option>"
+    if(produto.nome == pod){
 
-    return
+      sabores.innerHTML += `
+      <option>
+      ${produto.sabor}
+      </option>
+      `
 
-  }
-
-  sabores[pod].forEach(sabor => {
-
-    const option =
-    document.createElement("option")
-
-    option.value = sabor
-
-    option.textContent = sabor
-
-    select.appendChild(option)
+    }
 
   })
 
 }
 
-// adicionar carrinho
 function adicionarCarrinho(){
 
   const pod =
@@ -365,18 +497,14 @@ function adicionarCarrinho(){
   const sabor =
   document.getElementById("sabores").value
 
-  if(!pod){
-
-    alert("Escolha um pod!")
-    return
-
-  }
+  const produto =
+  produtos.find(p => p.nome == pod)
 
   carrinho.push({
 
     pod,
     sabor,
-    preco: Number(precos[pod])
+    preco:produto.preco
 
   })
 
@@ -384,7 +512,6 @@ function adicionarCarrinho(){
 
 }
 
-// atualizar carrinho
 function atualizarCarrinho(){
 
   const itens =
@@ -403,15 +530,15 @@ function atualizarCarrinho(){
 
     itens.innerHTML += `
 
-      <div class="itemCarrinho">
+    <div class="itemCarrinho">
 
-        <p><b>${item.pod}</b></p>
+      <h3>${item.pod}</h3>
 
-        <p>${item.sabor}</p>
+      <p>${item.sabor}</p>
 
-        <p>R$ ${item.preco}</p>
+      <p>R$ ${item.preco}</p>
 
-      </div>
+    </div>
 
     `
 
@@ -423,28 +550,20 @@ function atualizarCarrinho(){
 
 }
 
-// troco
 function mostrarTroco(){
 
   const pagamento =
   document.getElementById("pagamento").value
 
-  const trocoArea =
-  document.getElementById("trocoArea")
-
-  if(pagamento == "Dinheiro"){
-
-    trocoArea.style.display = "block"
-
-  }else{
-
-    trocoArea.style.display = "none"
-
-  }
+  document
+  .getElementById("trocoArea")
+  .style.display =
+  pagamento == "Dinheiro"
+  ? "block"
+  : "none"
 
 }
 
-// whatsapp
 function enviarWhatsapp(){
 
   const nome =
@@ -459,15 +578,7 @@ function enviarWhatsapp(){
   const troco =
   document.getElementById("troco").value
 
-  if(carrinho.length == 0){
-
-    alert("Adicione produtos!")
-    return
-
-  }
-
   let pedido = ""
-
   let total = 0
 
   carrinho.forEach(item => {
@@ -502,7 +613,11 @@ ${pedido}
 
 📝 Observação: ${obs}`
 
-  if(pagamento == "Dinheiro" && troco){
+  if(
+  pagamento == "Dinheiro"
+  &&
+  troco
+  ){
 
     mensagem +=
 `
@@ -511,12 +626,159 @@ ${pedido}
 
   }
 
-  const numero = "558486774080"
+  const numero =
+  "558486774080"
 
   const url =
 `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
 
-  window.open(url, "_blank")
+  window.open(url,"_blank")
+
+}
+
+function abrirAdmin(){
+
+  document
+  .getElementById("adminModal")
+  .style.display = "block"
+
+}
+
+function fecharAdmin(){
+
+  document
+  .getElementById("adminModal")
+  .style.display = "none"
+
+}
+
+function fazerLogin(){
+
+  const login =
+  document.getElementById("login").value
+
+  const senha =
+  document.getElementById("senha").value
+
+  if(
+  login == "gbpods"
+  &&
+  senha == "podsdogb2k26"
+  ){
+
+    document
+    .getElementById("painelAdmin")
+    .style.display = "block"
+
+    carregarAdmin()
+
+  }else{
+
+    alert("Login inválido!")
+
+  }
+
+}
+
+function adicionarProduto(){
+
+  const nome =
+  document.getElementById("novoNome").value
+
+  const sabor =
+  document.getElementById("novoSabor").value
+
+  const preco =
+  document.getElementById("novoPreco").value
+
+  produtos.push({
+
+    id:Date.now(),
+    nome,
+    sabor,
+    preco:Number(preco)
+
+  })
+
+  carregarProdutos()
+
+  carregarAdmin()
+
+}
+
+function carregarAdmin(){
+
+  const lista =
+  document.getElementById("listaAdmin")
+
+  lista.innerHTML = ""
+
+  produtos.forEach(produto => {
+
+    lista.innerHTML += `
+
+    <div class="admin-produto">
+
+      <h3>${produto.nome}</h3>
+
+      <p>${produto.sabor}</p>
+
+      <p>R$ ${produto.preco}</p>
+
+      <button
+      onclick="editarProduto(${produto.id})"
+      >
+      Editar
+      </button>
+
+      <button
+      onclick="removerProduto(${produto.id})"
+      >
+      Remover
+      </button>
+
+    </div>
+
+    `
+
+  })
+
+}
+
+function removerProduto(id){
+
+  produtos =
+  produtos.filter(
+  produto => produto.id != id
+  )
+
+  carregarProdutos()
+
+  carregarAdmin()
+
+}
+
+function editarProduto(id){
+
+  const produto =
+  produtos.find(p => p.id == id)
+
+  const novoNome =
+  prompt("Novo nome",produto.nome)
+
+  const novoSabor =
+  prompt("Novo sabor",produto.sabor)
+
+  const novoPreco =
+  prompt("Novo preço",produto.preco)
+
+  produto.nome = novoNome
+  produto.sabor = novoSabor
+  produto.preco = Number(novoPreco)
+
+  carregarProdutos()
+
+  carregarAdmin()
 
 }
 
@@ -525,4 +787,4 @@ carregarProdutos()
 </script>
 
 </body>
-      </html>
+  </html>
