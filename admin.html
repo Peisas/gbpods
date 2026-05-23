@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PAINEL ADMIN GB PODS</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#111;
+  color:white;
+  padding:20px;
+}
+
+.login,
+.painel{
+  max-width:500px;
+  margin:auto;
+  background:#1a1a1a;
+  padding:25px;
+  border-radius:20px;
+  border:2px solid red;
+  margin-top:40px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+  color:red;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border:none;
+  border-radius:10px;
+  background:#2a2a2a;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:10px;
+  background:red;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#cc0000;
+}
+
+.produto{
+  background:#222;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+}
+
+.acoes{
+  display:flex;
+  gap:10px;
+}
+
+.acoes button{
+  flex:1;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="login" id="login">
+
+<h1>LOGIN ADMIN</h1>
+
+<input
+type="password"
+id="senha"
+placeholder="Digite a senha"
+/>
+
+<button onclick="fazerLogin()">
+Entrar
+</button>
+
+</div>
+
+<!-- PAINEL -->
+
+<div
+class="painel"
+id="painel"
+style="display:none;"
+>
+
+<h1>PAINEL GB PODS</h1>
+
+<input
+type="text"
+id="nome"
+placeholder="Nome do Pod"
+/>
+
+<input
+type="text"
+id="sabor"
+placeholder="Sabor"
+/>
+
+<input
+type="number"
+id="preco"
+placeholder="Preço"
+/>
+
+<input
+type="text"
+id="imagem"
+placeholder="URL da imagem"
+/>
+
+<button onclick="adicionarProduto()">
+Adicionar Produto
+</button>
+
+<div id="listaProdutos"></div>
+
+</div>
+
+<script>
+
+const senhaAdmin = "gbpods2026"
+
+function fazerLogin(){
+
+  const senha =
+  document.getElementById("senha").value
+
+  if(senha === senhaAdmin){
+
+    document
+    .getElementById("login")
+    .style.display = "none"
+
+    document
+    .getElementById("painel")
+    .style.display = "block"
+
+    carregarProdutos()
+
+  }else{
+
+    alert("Senha incorreta!")
+
+  }
+
+}
+
+const supabaseUrl =
+'https://quknbmwjfdteqlaysvwp.supabase.co'
+
+const supabaseKey =
+'sb_publishable_kB3PjpFhT42CBzbn9W0eQA_kgRjHXfH'
+
+const client =
+supabase.createClient(
+supabaseUrl,
+supabaseKey
+)
+
+// adicionar produto
+async function adicionarProduto(){
+
+  const nome =
+  document.getElementById("nome").value
+
+  const sabor =
+  document.getElementById("sabor").value
+
+  const preco =
+  document.getElementById("preco").value
+
+  const imagem =
+  document.getElementById("imagem").value
+
+  if(!nome || !sabor || !preco){
+
+    alert("Preencha tudo!")
+    return
+
+  }
+
+  await client
+  .from('produtos')
+  .insert([{
+
+    nome,
+    sabor,
+    preco,
+    imagem,
+    estoque:true
+
+  }])
+
+  alert("Produto adicionado!")
+
+  carregarProdutos()
+
+}
+
+// carregar produtos
+async function carregarProdutos(){
+
+  const { data } =
+  await client
+  .from('produtos')
+  .select('*')
+
+  const lista =
+  document.getElementById("listaProdutos")
+
+  lista.innerHTML = ""
+
+  data.forEach(produto => {
+
+    lista.innerHTML += `
+
+      <div class="produto">
+
+        <h3>${produto.nome}</h3>
+
+        <p>${produto.sabor}</p>
+
+        <p>R$ ${produto.preco}</p>
+
+        <div class="acoes">
+
+          <button
+          onclick="removerProduto(${produto.id})">
+            Remover
+          </button>
+
+          <button
+          onclick="esgotarProduto(${produto.id})">
+            Esgotado
+          </button>
+
+        </div>
+
+      </div>
+
+    `
+
+  })
+
+}
+
+// remover
+async function removerProduto(id){
+
+  await client
+  .from('produtos')
+  .delete()
+  .eq('id', id)
+
+  carregarProdutos()
+
+}
+
+// esgotado
+async function esgotarProduto(id){
+
+  await client
+  .from('produtos')
+  .update({
+    estoque:false
+  })
+  .eq('id', id)
+
+  carregarProdutos()
+
+}
+
+</script>
+
+</body>
+  </html>
