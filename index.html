@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tropa GB Pods</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      background:#0b0b0b;
+      color:white;
+    }
+
+    header{
+      background:linear-gradient(90deg,#00ff88,#00bb66);
+      padding:25px;
+      text-align:center;
+      font-size:30px;
+      font-weight:bold;
+      color:black;
+      letter-spacing:2px;
+    }
+
+    .catalogo{
+      width:100%;
+      max-height:650px;
+      object-fit:cover;
+      border-bottom:4px solid #00ff88;
+    }
+
+    .box{
+      width:90%;
+      max-width:550px;
+      margin:40px auto;
+      background:#111;
+      padding:25px;
+      border-radius:20px;
+      border:2px solid #00ff88;
+      box-shadow:0 0 25px rgba(0,255,136,0.2);
+    }
+
+    .box h2{
+      margin-bottom:20px;
+      color:#00ff88;
+      text-align:center;
+    }
+
+    label{
+      display:block;
+      margin-top:20px;
+      margin-bottom:10px;
+      font-weight:bold;
+      color:#00ff88;
+    }
+
+    select,
+    input{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#1a1a1a;
+      color:white;
+      font-size:16px;
+    }
+
+    button{
+      width:100%;
+      padding:15px;
+      margin-top:25px;
+      border:none;
+      border-radius:12px;
+      background:#00ff88;
+      color:black;
+      font-size:17px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    button:hover{
+      background:#00cc6d;
+    }
+
+    .resultado{
+      margin-top:25px;
+      background:#1b1b1b;
+      padding:20px;
+      border-radius:15px;
+      display:none;
+      border:1px solid #00ff88;
+    }
+
+    .pedido{
+      margin-top:20px;
+      background:#151515;
+      padding:20px;
+      border-radius:15px;
+      border:1px solid #00ff88;
+    }
+
+    .pedido h3{
+      color:#00ff88;
+      margin-bottom:15px;
+    }
+
+    textarea{
+      width:100%;
+      height:100px;
+      background:#1a1a1a;
+      color:white;
+      border:none;
+      border-radius:12px;
+      padding:15px;
+      resize:none;
+      font-size:15px;
+    }
+
+    footer{
+      text-align:center;
+      padding:20px;
+      color:#777;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  TROPA GB PODS
+</header>
+
+<img src="1000225183.jpg" class="catalogo">
+
+<div class="box">
+
+  <h2>Monte Seu Pedido</h2>
+
+  <!-- ESCOLHER POD -->
+  <label>Escolha o Pod</label>
+
+  <select id="pod" onchange="atualizarSabores()">
+
+    <option value="">Selecione</option>
+
+    <option value="V80">V80 - 80K Puffs - R$130</option>
+
+    <option value="V250">V250 - 250K Puffs - R$160</option>
+
+    <option value="V150">V150 - 150K Puffs - R$150</option>
+
+    <option value="BS15">Black Sheep 15K - R$150</option>
+
+    <option value="BS55">Black Sheep 55K - R$190</option>
+
+  </select>
+
+  <!-- ESCOLHER SABOR -->
+  <label>Escolha o Sabor</label>
+
+  <select id="sabores">
+
+    <option>Selecione um pod primeiro</option>
+
+  </select>
+
+  <!-- NOME -->
+  <label>Seu Nome</label>
+
+  <input type="text" id="nome" placeholder="Digite seu nome">
+
+  <!-- OBSERVAÇÃO -->
+  <div class="pedido">
+
+    <h3>Observação do Pedido</h3>
+
+    <textarea 
+      id="obs"
+      placeholder="Ex: entrega rápida, troco para 200..."
+    ></textarea>
+
+  </div>
+
+  <button onclick="finalizarPedido()">
+    Fazer Pedido
+  </button>
+
+  <!-- RESULTADO -->
+  <div class="resultado" id="resultado"></div>
+
+</div>
+
+<footer>
+  © 2026 TROPA GB PODS
+</footer>
+
+<script>
+
+  // SABORES ESPECÍFICOS DE CADA POD
+  const sabores = {
+
+    V80: [
+      "Uva Ice",
+      "Frozen Morango",
+      "Menta Chiclete",
+      "Maracujá Kiwi",
+      "Melancia Ice"
+    ],
+
+    V250: [
+      "Melão Minty",
+      "Aloé Grape",
+      "Morango Banana"
+    ],
+
+    V150: [
+      "Framboesa"
+    ],
+
+    BS15: [
+      "Maracujá",
+      "Manga Pêssego Melancia",
+      "Melancia Morango",
+      "Menthol"
+    ],
+
+    BS55: [
+      "Cool Mint",
+      "Melancia Ice"
+    ]
+
+  };
+
+  // ATUALIZA SABORES
+  function atualizarSabores(){
+
+    const pod =
+      document.getElementById("pod").value;
+
+    const selectSabores =
+      document.getElementById("sabores");
+
+    selectSabores.innerHTML = "";
+
+    if(!pod){
+
+      selectSabores.innerHTML =
+      "<option>Selecione um pod primeiro</option>";
+
+      return;
+    }
+
+    sabores[pod].forEach(function(sabor){
+
+      const option =
+        document.createElement("option");
+
+      option.value = sabor;
+
+      option.textContent = sabor;
+
+      selectSabores.appendChild(option);
+
+    });
+
+  }
+
+  // FINALIZAR PEDIDO
+  function finalizarPedido(){
+
+    const pod =
+      document.getElementById("pod").value;
+
+    const sabor =
+      document.getElementById("sabores").value;
+
+    const nome =
+      document.getElementById("nome").value;
+
+    const obs =
+      document.getElementById("obs").value;
+
+    const resultado =
+      document.getElementById("resultado");
+
+    if(!pod){
+
+      alert("Escolha um pod!");
+
+      return;
+    }
+
+    resultado.style.display = "block";
+
+    resultado.innerHTML = `
+
+      <h2 style="color:#00ff88;">
+        Pedido Realizado ✅
+      </h2>
+
+      <br>
+
+      <p><b>Cliente:</b> ${nome}</p>
+
+      <p><b>Pod Escolhido:</b> ${pod}</p>
+
+      <p><b>Sabor:</b> ${sabor}</p>
+
+      <p><b>Observação:</b> ${obs}</p>
+
+      <br>
+
+      <p style="color:#00ff88;">
+        Seu pedido foi enviado com sucesso!
+      </p>
+
+    `;
+
+  }
+
+</script>
+
+</body>
+</html>
