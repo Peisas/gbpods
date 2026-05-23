@@ -182,6 +182,20 @@ footer{
   margin-top:15px;
 }
 
+.sabores-box{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.sabor-tag{
+  background:red;
+  padding:6px 12px;
+  border-radius:12px;
+  font-size:13px;
+}
+
 @media(max-width:600px){
 
   .logo{
@@ -333,7 +347,7 @@ id="adminModal"
 Fechar
 </button>
 
-<h2>Painel Sócio</h2>
+<h2>Painel Administrativo</h2>
 
 <input
 type="text"
@@ -371,16 +385,16 @@ placeholder="Nome do Pod"
 >
 
 <input
-type="text"
-id="novoSabor"
-placeholder="Sabor"
+type="number"
+id="novoPreco"
+placeholder="Preço"
 style="margin-top:15px;"
 >
 
 <input
-type="number"
-id="novoPreco"
-placeholder="Preço"
+type="text"
+id="novoSabores"
+placeholder="Sabores separados por vírgula"
 style="margin-top:15px;"
 >
 
@@ -412,22 +426,56 @@ let produtos = [
 {
 id:1,
 nome:"V80",
-sabor:"Uva Ice",
-preco:130
+preco:130,
+sabores:[
+"Uva Ice",
+"Frozen Morango",
+"Menta Chiclete",
+"Maracujá Kiwi",
+"Melancia Ice"
+]
 },
 
 {
 id:2,
 nome:"V250",
-sabor:"Melão Minty",
-preco:160
+preco:160,
+sabores:[
+"Melão Minty",
+"Aloé Grape",
+"Morango Banana"
+]
 },
 
 {
 id:3,
+nome:"V150",
+preco:150,
+sabores:[
+"Framboesa"
+]
+},
+
+{
+id:4,
 nome:"Black Sheep 15K",
-sabor:"Maracujá",
-preco:150
+preco:150,
+sabores:[
+"Maracujá",
+"Manga Pêssego Melancia",
+"Melancia Morango",
+"Menthol"
+]
+},
+
+{
+id:5,
+nome:"Black Sheep 55K",
+preco:190,
+sabores:[
+"Cool Mint",
+"Melancia Ice"
+]
 }
 
 ]
@@ -441,21 +489,15 @@ function carregarProdutos(){
 
   select.innerHTML = ""
 
-  let nomes = []
-
   produtos.forEach(produto => {
 
-    if(!nomes.includes(produto.nome)){
+    select.innerHTML += `
 
-      nomes.push(produto.nome)
-
-      select.innerHTML += `
-      <option value="${produto.nome}">
+    <option value="${produto.id}">
       ${produto.nome} - R$${produto.preco}
-      </option>
-      `
+    </option>
 
-    }
+    `
 
   })
 
@@ -465,25 +507,28 @@ function carregarProdutos(){
 
 function atualizarSabores(){
 
-  const pod =
+  const podId =
+  Number(
   document.getElementById("pod").value
+  )
 
-  const sabores =
+  const saboresSelect =
   document.getElementById("sabores")
 
-  sabores.innerHTML = ""
+  saboresSelect.innerHTML = ""
 
-  produtos.forEach(produto => {
+  const produto =
+  produtos.find(p => p.id == podId)
 
-    if(produto.nome == pod){
+  produto.sabores.forEach(sabor => {
 
-      sabores.innerHTML += `
-      <option>
-      ${produto.sabor}
-      </option>
-      `
+    saboresSelect.innerHTML += `
 
-    }
+    <option>
+      ${sabor}
+    </option>
+
+    `
 
   })
 
@@ -491,19 +536,21 @@ function atualizarSabores(){
 
 function adicionarCarrinho(){
 
-  const pod =
+  const podId =
+  Number(
   document.getElementById("pod").value
+  )
 
   const sabor =
   document.getElementById("sabores").value
 
   const produto =
-  produtos.find(p => p.nome == pod)
+  produtos.find(p => p.id == podId)
 
   carrinho.push({
 
-    pod,
-    sabor,
+    pod:produto.nome,
+    sabor:sabor,
     preco:produto.preco
 
   })
@@ -685,18 +732,25 @@ function adicionarProduto(){
   const nome =
   document.getElementById("novoNome").value
 
-  const sabor =
-  document.getElementById("novoSabor").value
-
   const preco =
+  Number(
   document.getElementById("novoPreco").value
+  )
+
+  const saboresTexto =
+  document.getElementById("novoSabores").value
+
+  const sabores =
+  saboresTexto
+  .split(",")
+  .map(item => item.trim())
 
   produtos.push({
 
     id:Date.now(),
     nome,
-    sabor,
-    preco:Number(preco)
+    preco,
+    sabores
 
   })
 
@@ -715,15 +769,29 @@ function carregarAdmin(){
 
   produtos.forEach(produto => {
 
+    let saboresHTML = ""
+
+    produto.sabores.forEach(sabor => {
+
+      saboresHTML += `
+      <div class="sabor-tag">
+        ${sabor}
+      </div>
+      `
+
+    })
+
     lista.innerHTML += `
 
     <div class="admin-produto">
 
       <h3>${produto.nome}</h3>
 
-      <p>${produto.sabor}</p>
-
       <p>R$ ${produto.preco}</p>
+
+      <div class="sabores-box">
+        ${saboresHTML}
+      </div>
 
       <button
       onclick="editarProduto(${produto.id})"
@@ -766,15 +834,24 @@ function editarProduto(id){
   const novoNome =
   prompt("Novo nome",produto.nome)
 
-  const novoSabor =
-  prompt("Novo sabor",produto.sabor)
-
   const novoPreco =
   prompt("Novo preço",produto.preco)
 
+  const novosSabores =
+  prompt(
+  "Sabores separados por vírgula",
+  produto.sabores.join(", ")
+  )
+
   produto.nome = novoNome
-  produto.sabor = novoSabor
-  produto.preco = Number(novoPreco)
+
+  produto.preco =
+  Number(novoPreco)
+
+  produto.sabores =
+  novosSabores
+  .split(",")
+  .map(item => item.trim())
 
   carregarProdutos()
 
@@ -787,4 +864,4 @@ carregarProdutos()
 </script>
 
 </body>
-  </html>
+</html>
