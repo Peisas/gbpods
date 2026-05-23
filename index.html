@@ -15,13 +15,13 @@
     }
 
     body{
-      background:#0b0b0b;
+      background:#0a0a0a;
       color:white;
     }
 
     header{
       background:linear-gradient(90deg,#00ff88,#00bb66);
-      padding:25px;
+      padding:22px;
       text-align:center;
       font-size:30px;
       font-weight:bold;
@@ -29,17 +29,19 @@
       letter-spacing:2px;
     }
 
+    /* CATÁLOGO MESMA PROPORÇÃO */
     .catalogo{
       width:100%;
-      max-height:650px;
-      object-fit:cover;
-      border-bottom:4px solid #00ff88;
+      max-width:700px;
+      display:block;
+      margin:auto;
+      object-fit:contain;
     }
 
-    .box{
+    .container{
       width:90%;
       max-width:550px;
-      margin:40px auto;
+      margin:30px auto;
       background:#111;
       padding:25px;
       border-radius:20px;
@@ -47,29 +49,35 @@
       box-shadow:0 0 25px rgba(0,255,136,0.2);
     }
 
-    .box h2{
-      margin-bottom:20px;
-      color:#00ff88;
+    h2{
       text-align:center;
+      color:#00ff88;
+      margin-bottom:20px;
     }
 
     label{
       display:block;
-      margin-top:20px;
-      margin-bottom:10px;
-      font-weight:bold;
+      margin-top:18px;
+      margin-bottom:8px;
       color:#00ff88;
+      font-weight:bold;
     }
 
     select,
-    input{
+    input,
+    textarea{
       width:100%;
       padding:14px;
       border:none;
       border-radius:12px;
-      background:#1a1a1a;
+      background:#1b1b1b;
       color:white;
-      font-size:16px;
+      font-size:15px;
+    }
+
+    textarea{
+      height:100px;
+      resize:none;
     }
 
     button{
@@ -91,43 +99,18 @@
     }
 
     .resultado{
-      margin-top:25px;
-      background:#1b1b1b;
-      padding:20px;
-      border-radius:15px;
       display:none;
-      border:1px solid #00ff88;
-    }
-
-    .pedido{
-      margin-top:20px;
-      background:#151515;
+      margin-top:25px;
+      background:#1a1a1a;
       padding:20px;
       border-radius:15px;
       border:1px solid #00ff88;
-    }
-
-    .pedido h3{
-      color:#00ff88;
-      margin-bottom:15px;
-    }
-
-    textarea{
-      width:100%;
-      height:100px;
-      background:#1a1a1a;
-      color:white;
-      border:none;
-      border-radius:12px;
-      padding:15px;
-      resize:none;
-      font-size:15px;
     }
 
     footer{
       text-align:center;
-      padding:20px;
-      color:#777;
+      padding:25px;
+      color:#666;
     }
 
   </style>
@@ -138,58 +121,60 @@
   TROPA GB PODS
 </header>
 
-<img src="IMG_20260523_020935.jpg" class="catalogo">
+<!-- CATÁLOGO -->
+<img src="1000225183.jpg" class="catalogo">
 
-<div class="box">
+<div class="container">
 
   <h2>Monte Seu Pedido</h2>
 
-  <!-- ESCOLHER POD -->
+  <!-- POD -->
   <label>Escolha o Pod</label>
 
   <select id="pod" onchange="atualizarSabores()">
 
     <option value="">Selecione</option>
 
-    <option value="V80">V80 - 80K Puffs - R$130</option>
+    <option value="V80">V80 - R$130</option>
 
-    <option value="V250">V250 - 250K Puffs - R$160</option>
+    <option value="V250">V250 - R$160</option>
 
-    <option value="V150">V150 - 150K Puffs - R$150</option>
+    <option value="V150">V150 - R$150</option>
 
-    <option value="BS15">Black Sheep 15K - R$150</option>
+    <option value="Black Sheep 15K">Black Sheep 15K - R$150</option>
 
-    <option value="BS55">Black Sheep 55K - R$190</option>
+    <option value="Black Sheep 55K">Black Sheep 55K - R$190</option>
 
   </select>
 
-  <!-- ESCOLHER SABOR -->
+  <!-- SABOR -->
   <label>Escolha o Sabor</label>
 
   <select id="sabores">
 
-    <option>Selecione um pod primeiro</option>
+    <option>Escolha um pod primeiro</option>
 
   </select>
 
   <!-- NOME -->
   <label>Seu Nome</label>
 
-  <input type="text" id="nome" placeholder="Digite seu nome">
+  <input 
+    type="text"
+    id="nome"
+    placeholder="Digite seu nome"
+  >
 
-  <!-- OBSERVAÇÃO -->
-  <div class="pedido">
+  <!-- OBS -->
+  <label>Observação</label>
 
-    <h3>Observação do Pedido</h3>
+  <textarea 
+    id="obs"
+    placeholder="Ex: troco, entrega rápida..."
+  ></textarea>
 
-    <textarea 
-      id="obs"
-      placeholder="Ex: entrega rápida, troco para 200..."
-    ></textarea>
-
-  </div>
-
-  <button onclick="finalizarPedido()">
+  <!-- BOTÃO -->
+  <button onclick="enviarWhatsapp()">
     Fazer Pedido
   </button>
 
@@ -204,10 +189,10 @@
 
 <script>
 
-  // SABORES ESPECÍFICOS DE CADA POD
+  // SABORES POR POD
   const sabores = {
 
-    V80: [
+    "V80": [
       "Uva Ice",
       "Frozen Morango",
       "Menta Chiclete",
@@ -215,47 +200,48 @@
       "Melancia Ice"
     ],
 
-    V250: [
+    "V250": [
       "Melão Minty",
       "Aloé Grape",
       "Morango Banana"
     ],
 
-    V150: [
+    "V150": [
       "Framboesa"
     ],
 
-    BS15: [
+    "Black Sheep 15K": [
       "Maracujá",
       "Manga Pêssego Melancia",
       "Melancia Morango",
       "Menthol"
     ],
 
-    BS55: [
+    "Black Sheep 55K": [
       "Cool Mint",
       "Melancia Ice"
     ]
 
   };
 
-  // ATUALIZA SABORES
+  // ATUALIZAR SABORES
   function atualizarSabores(){
 
     const pod =
       document.getElementById("pod").value;
 
-    const selectSabores =
+    const select =
       document.getElementById("sabores");
 
-    selectSabores.innerHTML = "";
+    select.innerHTML = "";
 
     if(!pod){
 
-      selectSabores.innerHTML =
-      "<option>Selecione um pod primeiro</option>";
+      select.innerHTML =
+      "<option>Escolha um pod primeiro</option>";
 
       return;
+
     }
 
     sabores[pod].forEach(function(sabor){
@@ -267,14 +253,14 @@
 
       option.textContent = sabor;
 
-      selectSabores.appendChild(option);
+      select.appendChild(option);
 
     });
 
   }
 
-  // FINALIZAR PEDIDO
-  function finalizarPedido(){
+  // WHATSAPP
+  function enviarWhatsapp(){
 
     const pod =
       document.getElementById("pod").value;
@@ -288,39 +274,49 @@
     const obs =
       document.getElementById("obs").value;
 
-    const resultado =
-      document.getElementById("resultado");
-
     if(!pod){
 
       alert("Escolha um pod!");
 
       return;
+
     }
+
+    const mensagem = 
+`Olá, gostaria de fazer um pedido!
+
+👤 Nome: ${nome}
+
+🔥 Pod Escolhido: ${pod}
+
+🍓 Sabor: ${sabor}
+
+📝 Observação: ${obs}`;
+
+    const numero = "558486774080";
+
+    const url =
+`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, "_blank");
+
+    // RESULTADO VISUAL
+    const resultado =
+      document.getElementById("resultado");
 
     resultado.style.display = "block";
 
     resultado.innerHTML = `
 
-      <h2 style="color:#00ff88;">
-        Pedido Realizado ✅
-      </h2>
+      <h3 style="color:#00ff88;">
+        Pedido enviado com sucesso ✅
+      </h3>
 
       <br>
 
-      <p><b>Cliente:</b> ${nome}</p>
-
-      <p><b>Pod Escolhido:</b> ${pod}</p>
+      <p><b>Pod:</b> ${pod}</p>
 
       <p><b>Sabor:</b> ${sabor}</p>
-
-      <p><b>Observação:</b> ${obs}</p>
-
-      <br>
-
-      <p style="color:#00ff88;">
-        Seu pedido foi enviado com sucesso!
-      </p>
 
     `;
 
