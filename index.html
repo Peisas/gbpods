@@ -8,7 +8,6 @@
 <title>GB PODS</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -329,8 +328,6 @@ placeholder="Ex: 200"
 
 </div>
 
-<!-- ADMIN -->
-
 <div
 class="modal"
 id="adminModal"
@@ -416,12 +413,62 @@ style="margin-top:25px;"
 © 2026 TROPA GB PODS
 </footer>
 
-<script>
+<script type="module">
 
-let produtos = JSON.parse(localStorage.getItem("gbpods_produtos")) || [
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+getDatabase,
+ref,
+push,
+onValue,
+remove,
+update
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBNDan8JRq3BL6fHMLprioT6XZEzRsaCjg",
+authDomain: "gbpods-da517.firebaseapp.com",
+databaseURL: "https://gbpods-da517-default-rtdb.firebaseio.com",
+projectId: "gbpods-da517",
+storageBucket: "gbpods-da517.firebasestorage.app",
+messagingSenderId: "833362880198",
+appId: "1:833362880198:web:4080cbfa85a0d4b5e559c7",
+measurementId: "G-N5Z9XY25SD"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let produtos = [];
+let carrinho = [];
+
+const produtosRef = ref(db, "produtos");
+
+onValue(produtosRef, (snapshot) => {
+
+const dados = snapshot.val();
+
+produtos = [];
+
+if(dados){
+
+Object.keys(dados).forEach(key => {
+
+produtos.push({
+firebaseId:key,
+...dados[key]
+});
+
+});
+
+}
+
+if(produtos.length === 0){
+
+const iniciais = [
 
 {
-id:1,
 nome:"V80",
 preco:130,
 sabores:[
@@ -434,7 +481,6 @@ sabores:[
 },
 
 {
-id:2,
 nome:"V250",
 preco:160,
 sabores:[
@@ -444,192 +490,154 @@ sabores:[
 ]
 }
 
-]
+];
 
-let carrinho = []
+iniciais.forEach(produto => {
+push(produtosRef, produto);
+});
 
-function salvarProdutos(){
-  localStorage.setItem(
-    "gbpods_produtos",
-    JSON.stringify(produtos)
-  )
 }
+
+carregarProdutos();
+carregarAdmin();
+
+});
 
 function carregarProdutos(){
 
-  const select =
-  document.getElementById("pod")
+const select = document.getElementById("pod");
 
-  select.innerHTML = ""
+select.innerHTML = "";
 
-  produtos.forEach(produto => {
+produtos.forEach((produto,index) => {
 
-    select.innerHTML += `
+select.innerHTML += `
+<option value="${index}">
+${produto.nome} - R$${produto.preco}
+</option>
+`;
 
-    <option value="${produto.id}">
-      ${produto.nome} - R$${produto.preco}
-    </option>
+});
 
-    `
-
-  })
-
-  atualizarSabores()
+atualizarSabores();
 
 }
 
-function atualizarSabores(){
+window.atualizarSabores = function(){
 
-  const podId =
-  Number(
-  document.getElementById("pod").value
-  )
+const podId = Number(document.getElementById("pod").value);
 
-  const saboresSelect =
-  document.getElementById("sabores")
+const saboresSelect = document.getElementById("sabores");
 
-  saboresSelect.innerHTML = ""
+saboresSelect.innerHTML = "";
 
-  const produto =
-  produtos.find(p => p.id == podId)
+const produto = produtos[podId];
 
-  if(!produto) return
+if(!produto) return;
 
-  produto.sabores.forEach(sabor => {
+produto.sabores.forEach(sabor => {
 
-    saboresSelect.innerHTML += `
+saboresSelect.innerHTML += `
+<option>${sabor}</option>
+`;
 
-    <option>
-      ${sabor}
-    </option>
-
-    `
-
-  })
+});
 
 }
 
-function adicionarCarrinho(){
+window.adicionarCarrinho = function(){
 
-  const podId =
-  Number(
-  document.getElementById("pod").value
-  )
+const podId = Number(document.getElementById("pod").value);
+const sabor = document.getElementById("sabores").value;
 
-  const sabor =
-  document.getElementById("sabores").value
+const produto = produtos[podId];
 
-  const produto =
-  produtos.find(p => p.id == podId)
+carrinho.push({
+pod:produto.nome,
+sabor:sabor,
+preco:produto.preco
+});
 
-  carrinho.push({
-
-    pod:produto.nome,
-    sabor:sabor,
-    preco:produto.preco
-
-  })
-
-  atualizarCarrinho()
+atualizarCarrinho();
 
 }
 
-function removerCarrinho(index){
+window.removerCarrinho = function(index){
 
-  carrinho.splice(index,1)
+carrinho.splice(index,1);
 
-  atualizarCarrinho()
+atualizarCarrinho();
 
 }
 
 function atualizarCarrinho(){
 
-  const itens =
-  document.getElementById("itensCarrinho")
+const itens = document.getElementById("itensCarrinho");
+const total = document.getElementById("total");
 
-  const total =
-  document.getElementById("total")
+itens.innerHTML = "";
 
-  itens.innerHTML = ""
+let soma = 0;
 
-  let soma = 0
+carrinho.forEach((item,index) => {
 
-  carrinho.forEach((item,index) => {
+soma += item.preco;
 
-    soma += item.preco
+itens.innerHTML += `
+<div class="itemCarrinho">
+<h3>${item.pod}</h3>
+<p>${item.sabor}</p>
+<p>R$ ${item.preco}</p>
+<button
+class="remover-btn"
+onclick="removerCarrinho(${index})"
+>
+Remover
+</button>
+</div>
+`;
 
-    itens.innerHTML += `
+});
 
-    <div class="itemCarrinho">
-
-      <h3>${item.pod}</h3>
-
-      <p>${item.sabor}</p>
-
-      <p>R$ ${item.preco}</p>
-
-      <button
-      class="remover-btn"
-      onclick="removerCarrinho(${index})"
-      >
-      Remover
-      </button>
-
-    </div>
-
-    `
-
-  })
-
-  total.innerText = soma
+total.innerText = soma;
 
 }
 
-function mostrarTroco(){
+window.mostrarTroco = function(){
 
-  const pagamento =
-  document.getElementById("pagamento").value
+const pagamento = document.getElementById("pagamento").value;
 
-  document
-  .getElementById("trocoArea")
-  .style.display =
-  pagamento == "Dinheiro"
-  ? "block"
-  : "none"
+document.getElementById("trocoArea").style.display =
+pagamento == "Dinheiro"
+? "block"
+: "none";
 
 }
 
-function enviarWhatsapp(){
+window.enviarWhatsapp = function(){
 
-  const nome =
-  document.getElementById("nome").value
+const nome = document.getElementById("nome").value;
+const obs = document.getElementById("obs").value;
+const pagamento = document.getElementById("pagamento").value;
+const troco = document.getElementById("troco").value;
 
-  const obs =
-  document.getElementById("obs").value
+let pedido = "";
+let total = 0;
 
-  const pagamento =
-  document.getElementById("pagamento").value
+carrinho.forEach(item => {
 
-  const troco =
-  document.getElementById("troco").value
-
-  let pedido = ""
-  let total = 0
-
-  carrinho.forEach(item => {
-
-    pedido +=
+pedido +=
 `🔥 ${item.pod}
 🍓 ${item.sabor}
 💰 R$ ${item.preco}
 
-`
+`;
 
-    total += item.preco
+ total += item.preco;
 
-  })
+});
 
-  let mensagem =
+let mensagem =
 `Olá, gostaria de fazer um pedido!
 
 👤 Nome: ${nome}
@@ -642,218 +650,151 @@ ${pedido}
 
 💳 Pagamento: ${pagamento}
 
-📝 Observação: ${obs}`
+📝 Observação: ${obs}`;
 
-  if(
-  pagamento == "Dinheiro"
-  &&
-  troco
-  ){
+if(pagamento == "Dinheiro" && troco){
 
-    mensagem +=
-`
+mensagem += `
 
-💸 Troco para: R$ ${troco}`
-
-  }
-
-  const numero =
-  "558486774080"
-
-  const url =
-`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
-
-  window.open(url,"_blank")
+💸 Troco para: R$ ${troco}`;
 
 }
 
-function abrirAdmin(){
+const numero = "558486774080";
 
-  document
-  .getElementById("adminModal")
-  .style.display = "block"
+const url =
+`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 
-}
-
-function fecharAdmin(){
-
-  document
-  .getElementById("adminModal")
-  .style.display = "none"
+window.open(url,"_blank");
 
 }
 
-function fazerLogin(){
+window.abrirAdmin = function(){
 
-  const login =
-  document.getElementById("login").value
-
-  const senha =
-  document.getElementById("senha").value
-
-  if(
-  login == "gbpods"
-  &&
-  senha == "podsdogb2k26"
-  ){
-
-    document
-    .getElementById("painelAdmin")
-    .style.display = "block"
-
-    carregarAdmin()
-
-  }else{
-
-    alert("Login inválido!")
-
-  }
+document.getElementById("adminModal").style.display = "block";
 
 }
 
-function adicionarProduto(){
+window.fecharAdmin = function(){
 
-  const nome =
-  document.getElementById("novoNome").value
+document.getElementById("adminModal").style.display = "none";
 
-  const preco =
-  Number(
-  document.getElementById("novoPreco").value
-  )
+}
 
-  const saboresTexto =
-  document.getElementById("novoSabores").value
+window.fazerLogin = function(){
 
-  const sabores =
-  saboresTexto
-  .split(",")
-  .map(item => item.trim())
+const login = document.getElementById("login").value;
+const senha = document.getElementById("senha").value;
 
-  produtos.push({
+if(login == "gbpods" && senha == "podsdogb2k26"){
 
-    id:Date.now(),
-    nome,
-    preco,
-    sabores
+document.getElementById("painelAdmin").style.display = "block";
 
-  })
+carregarAdmin();
 
-  salvarProdutos()
+}else{
 
-  carregarProdutos()
+alert("Login inválido!");
 
-  carregarAdmin()
+}
 
-  document.getElementById("novoNome").value = ""
-  document.getElementById("novoPreco").value = ""
-  document.getElementById("novoSabores").value = ""
+}
+
+window.adicionarProduto = function(){
+
+const nome = document.getElementById("novoNome").value;
+const preco = Number(document.getElementById("novoPreco").value);
+const saboresTexto = document.getElementById("novoSabores").value;
+
+const sabores = saboresTexto
+.split(",")
+.map(item => item.trim());
+
+push(produtosRef, {
+nome,
+preco,
+sabores
+});
+
+ document.getElementById("novoNome").value = "";
+ document.getElementById("novoPreco").value = "";
+ document.getElementById("novoSabores").value = "";
 
 }
 
 function carregarAdmin(){
 
-  const lista =
-  document.getElementById("listaAdmin")
+const lista = document.getElementById("listaAdmin");
 
-  lista.innerHTML = ""
+if(!lista) return;
 
-  produtos.forEach(produto => {
+lista.innerHTML = "";
 
-    let saboresHTML = ""
+produtos.forEach(produto => {
 
-    produto.sabores.forEach(sabor => {
+let saboresHTML = "";
 
-      saboresHTML += `
-      <div class="sabor-tag">
-        ${sabor}
-      </div>
-      `
+produto.sabores.forEach(sabor => {
 
-    })
+saboresHTML += `
+<div class="sabor-tag">
+${sabor}
+</div>
+`;
 
-    lista.innerHTML += `
+});
 
-    <div class="admin-produto">
+lista.innerHTML += `
+<div class="admin-produto">
+<h3>${produto.nome}</h3>
+<p>R$ ${produto.preco}</p>
+<div class="sabores-box">
+${saboresHTML}
+</div>
+<button
+onclick="editarProduto('${produto.firebaseId}')"
+>
+Editar
+</button>
+<button
+onclick="removerProduto('${produto.firebaseId}')"
+>
+Remover
+</button>
+</div>
+`;
 
-      <h3>${produto.nome}</h3>
-
-      <p>R$ ${produto.preco}</p>
-
-      <div class="sabores-box">
-        ${saboresHTML}
-      </div>
-
-      <button
-      onclick="editarProduto(${produto.id})"
-      >
-      Editar
-      </button>
-
-      <button
-      onclick="removerProduto(${produto.id})"
-      >
-      Remover
-      </button>
-
-    </div>
-
-    `
-
-  })
+});
 
 }
 
-function removerProduto(id){
+window.removerProduto = function(id){
 
-  produtos =
-  produtos.filter(
-  produto => produto.id != id
-  )
-
-  salvarProdutos()
-
-  carregarProdutos()
-
-  carregarAdmin()
+remove(ref(db, `produtos/${id}`));
 
 }
 
-function editarProduto(id){
+window.editarProduto = function(id){
 
-  const produto =
-  produtos.find(p => p.id == id)
+const produto = produtos.find(p => p.firebaseId == id);
 
-  const novoNome =
-  prompt("Novo nome",produto.nome)
+const novoNome = prompt("Novo nome", produto.nome);
+const novoPreco = prompt("Novo preço", produto.preco);
 
-  const novoPreco =
-  prompt("Novo preço",produto.preco)
+const novosSabores = prompt(
+"Sabores separados por vírgula",
+produto.sabores.join(", ")
+);
 
-  const novosSabores =
-  prompt(
-  "Sabores separados por vírgula",
-  produto.sabores.join(", ")
-  )
-
-  produto.nome = novoNome
-
-  produto.preco =
-  Number(novoPreco)
-
-  produto.sabores =
-  novosSabores
-  .split(",")
-  .map(item => item.trim())
-
-  salvarProdutos()
-
-  carregarProdutos()
-
-  carregarAdmin()
+update(ref(db, `produtos/${id}`), {
+nome:novoNome,
+preco:Number(novoPreco),
+sabores:novosSabores
+.split(",")
+.map(item => item.trim())
+});
 
 }
-
-carregarProdutos()
 
 </script>
 
